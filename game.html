@@ -1,0 +1,144 @@
+<html>
+
+<style>
+canvas { background: grey; }
+
+</style>
+
+<body>
+<canvas id="myCanvas" width="500" height="650"></canvas><br>
+lose:<output id="lose" type="text"></output><br>
+Lives:<output id="lives" type="text"></output>
+
+<script>
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+var x = 500 * Math.random(1)+1;
+var y = 20;
+var downx = 0;
+var gravity = new Array(4* Math.random(2)+1,4* Math.random(2)+1,4* Math.random(2)+1,4* Math.random(2)+1,4* Math.random(2)+1,4* Math.random(2)+1);
+var paddleHeight = 40;
+var paddleWidth = 40;
+var paddleX = canvas.width-paddleWidth;
+var paddleY = canvas.height-paddleHeight;
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
+var ballRadius = 10;
+var life=0;
+var actlife=
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+
+function keyDownHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = true;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = true;
+    }
+    else if(e.key == "Up" || e.key == "ArrowUp") {
+        upPressed = true;
+    }
+    else if(e.key == "Down" || e.key == "ArrowDown") {
+        downPressed = true;
+    }
+}
+
+function keyUpHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = false;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = false;
+    }
+    else if(e.key == "Up" || e.key == "ArrowUp") {
+        upPressed = false;
+    }
+    else if(e.key == "Down" || e.key == "ArrowDown") {
+        downPressed = false;
+    }
+}
+
+var xCoordinates = new Array(500*Math.random(),500*Math.random(),500*Math.random(),500*Math.random(),500*Math.random(),500*Math.random());
+var yCoordinates = new Array(0,0,0,0,0,0,);
+
+function drawBall() {
+for(i=0;i<6;i++){
+    ctx.beginPath();
+    ctx.arc(xCoordinates[i], yCoordinates[i], ballRadius, 0, Math.PI*2);
+    ctx.fillStyle = 'red';
+    ctx.fill();
+    ctx.closePath();
+
+}
+//loop
+}
+
+function drawPaddle(){
+  var s = new Image();
+  s.src="spaceship.png";
+  ctx.drawImage(s,paddleX, paddleY,paddleWidth,paddleHeight);
+
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall();
+    drawPaddle();
+
+
+
+  for(i=0;i<6;i++){
+    yCoordinates[i] += gravity[i];
+
+}
+
+  for(i=0;i<6;i++){
+    if(yCoordinates[i] + gravity[i] > canvas.height || y + gravity[i]<0) {
+    xCoordinates[i] = 500 * Math.random(1)+1;
+    yCoordinates[i] = 20;
+    gravity[i] =  4* Math.random(2)+1;
+  }
+loseGame(xCoordinates[i],yCoordinates[i])
+
+
+
+
+  }
+
+
+    if(rightPressed && paddleX < canvas.width-paddleWidth) {
+      paddleX += 4;
+      }
+    else if(leftPressed && paddleX > 0) {
+      paddleX -= 4;
+    }
+    else if(upPressed ){
+      paddleY -= 4;
+    }
+    else if(downPressed){
+      paddleY += 4;
+    }
+
+
+    function loseGame(x,y){
+
+      if(paddleX-x <= 20 && paddleX-x >= -60 && paddleY-y <= 20 && paddleY-y >= -60){
+      document.getElementById('lose').value++;
+      life--;
+      document.getElementById('lives').value=life;
+
+      }
+
+
+    }
+}
+
+setInterval(draw, 10);
+</script>
+</body>
+</html>
